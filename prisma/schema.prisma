@@ -1,0 +1,287 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model actividades {
+  id             BigInt    @id
+  usuario_id     BigInt?
+  tipo_actividad String
+  descripcion    String?
+  fecha          DateTime? @default(now()) @db.Timestamp(6)
+  usuarios       usuarios? @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model carrito {
+  id          BigInt     @id
+  usuario_id  BigInt?
+  producto_id BigInt?
+  cantidad    Int
+  productos   productos? @relation(fields: [producto_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  usuarios    usuarios?  @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model categorias {
+  id          BigInt      @id
+  nombre      String
+  descripcion String?
+  seccion_id  BigInt?
+  secciones   secciones?  @relation(fields: [seccion_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  productos   productos[]
+}
+
+model cupones {
+  id                   BigInt    @id
+  codigo               String    @unique
+  descripcion          String?
+  descuento_porcentaje Decimal?  @db.Decimal(5, 2)
+  descuento_fijo       Decimal?  @db.Decimal(10, 2)
+  fecha_inicio         DateTime? @db.Timestamp(6)
+  fecha_fin            DateTime? @db.Timestamp(6)
+  uso_maximo           Int?
+  uso_actual           Int?      @default(0)
+  pedidos              pedidos[]
+}
+
+model detalles_cliente {
+  id                    BigInt    @id
+  usuario_id            BigInt?
+  nombre_completo       String
+  numero_cedula         String?
+  telefono              String?
+  direccion             String?
+  referencia            String?
+  provincia             String?
+  ciudad                String?
+  informacion_adicional String?
+  usuarios              usuarios? @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model detalles_pedido {
+  id              BigInt     @id
+  pedido_id       BigInt?
+  producto_id     BigInt?
+  cantidad        Int
+  precio_unitario Decimal    @db.Decimal(10, 2)
+  pedidos         pedidos?   @relation(fields: [pedido_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  productos       productos? @relation(fields: [producto_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model facturas {
+  id            BigInt    @id
+  pedido_id     BigInt?
+  fecha_emision DateTime? @default(now()) @db.Timestamp(6)
+  total         Decimal   @db.Decimal(10, 2)
+  detalles      String?
+  pedidos       pedidos?  @relation(fields: [pedido_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model favoritos {
+  id          BigInt     @id
+  usuario_id  BigInt?
+  producto_id BigInt?
+  productos   productos? @relation(fields: [producto_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  usuarios    usuarios?  @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model imagenes {
+  id          BigInt     @id
+  producto_id BigInt?
+  url         String
+  productos   productos? @relation(fields: [producto_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model impuestos {
+  id                BigInt              @id
+  nombre            String
+  porcentaje        Decimal             @db.Decimal(5, 2)
+  producto_impuesto producto_impuesto[]
+}
+
+model marcas {
+  id          BigInt      @id
+  nombre      String
+  descripcion String?
+  productos   productos[]
+}
+
+model medios_publicidad {
+  id            BigInt      @id
+  publicidad_id BigInt?
+  tipo          String?
+  url           String
+  publicidad    publicidad? @relation(fields: [publicidad_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model mensajes {
+  id                                          BigInt    @id
+  remitente_id                                BigInt?
+  destinatario_id                             BigInt?
+  contenido                                   String
+  fecha_envio                                 DateTime? @default(now()) @db.Timestamp(6)
+  usuarios_mensajes_destinatario_idTousuarios usuarios? @relation("mensajes_destinatario_idTousuarios", fields: [destinatario_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  usuarios_mensajes_remitente_idTousuarios    usuarios? @relation("mensajes_remitente_idTousuarios", fields: [remitente_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model metodos_entrega {
+  id          BigInt    @id
+  nombre      String
+  descripcion String?
+  costo       Decimal?  @db.Decimal(10, 2)
+  pedidos     pedidos[]
+}
+
+model metodos_pago {
+  id          BigInt    @id
+  nombre      String
+  descripcion String?
+  costo       Decimal?  @db.Decimal(10, 2)
+  pedidos     pedidos[]
+}
+
+model pedidos {
+  id                BigInt            @id
+  usuario_id        BigInt?
+  fecha_pedido      DateTime?         @default(now()) @db.Timestamp(6)
+  estado            String
+  total             Decimal           @db.Decimal(10, 2)
+  numero_pedido     String?           @unique
+  subtotal          Decimal?          @db.Decimal(10, 2)
+  valor_iva         Decimal?          @db.Decimal(10, 2)
+  costo_envio       Decimal?          @db.Decimal(10, 2)
+  total_neto        Decimal?          @db.Decimal(10, 2)
+  metodo_entrega_id BigInt?
+  metodo_pago_id    BigInt?
+  descuento         Decimal?          @db.Decimal(10, 2)
+  cupon_id          BigInt?
+  detalles          String?
+  detalles_pedido   detalles_pedido[]
+  facturas          facturas[]
+  cupones           cupones?          @relation(fields: [cupon_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  metodos_entrega   metodos_entrega?  @relation(fields: [metodo_entrega_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  metodos_pago      metodos_pago?     @relation(fields: [metodo_pago_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  usuarios          usuarios?         @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model producto_impuesto {
+  id          BigInt     @id
+  producto_id BigInt?
+  impuesto_id BigInt?
+  impuestos   impuestos? @relation(fields: [impuesto_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  productos   productos? @relation(fields: [producto_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model productos {
+  id                BigInt               @id
+  nombre            String
+  descripcion       String?
+  precio            Decimal              @db.Decimal(10, 2)
+  stock             Int
+  categoria_id      BigInt?
+  visible           Boolean?             @default(true)
+  marca_id          BigInt?
+  discount_price    Decimal?             @db.Decimal(10, 2)
+  colors            String[]
+  weight            String?
+  condition         String?
+  warranty          String?
+  shipping_included Boolean?             @default(false)
+  time_left         String?
+  sku               String?              @unique
+  carrito           carrito[]
+  detalles_pedido   detalles_pedido[]
+  favoritos         favoritos[]
+  imagenes          imagenes[]
+  producto_impuesto producto_impuesto[]
+  categorias        categorias?          @relation(fields: [categoria_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  marcas            marcas?              @relation(fields: [marca_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  inventario        inventario[]
+  proveedores       producto_proveedor[]
+}
+
+model publicidad {
+  id                BigInt              @id
+  titulo            String
+  contenido         String?
+  fecha_inicio      DateTime?           @db.Timestamp(6)
+  fecha_fin         DateTime?           @db.Timestamp(6)
+  visible           Boolean?            @default(true)
+  texto_html        String?
+  medios_publicidad medios_publicidad[]
+}
+
+model secciones {
+  id          BigInt       @id
+  nombre      String
+  descripcion String?
+  categorias  categorias[]
+}
+
+model sesiones {
+  id         BigInt    @id
+  usuario_id BigInt?
+  token      String
+  inicio     DateTime? @default(now()) @db.Timestamp(6)
+  fin        DateTime? @db.Timestamp(6)
+  usuarios   usuarios? @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model usuarios {
+  id                                          BigInt             @id @default(autoincrement())
+  nombre                                      String
+  email                                       String             @unique
+  password                                    String             @map("password")
+  tipo_usuario                                String
+  nivel_prioridad                             Int?               @default(0)
+  createdAt                                   DateTime           @default(now())
+  actividades                                 actividades[]
+  carrito                                     carrito[]
+  detalles_cliente                            detalles_cliente[]
+  favoritos                                   favoritos[]
+  mensajes_mensajes_destinatario_idTousuarios mensajes[]         @relation("mensajes_destinatario_idTousuarios")
+  mensajes_mensajes_remitente_idTousuarios    mensajes[]         @relation("mensajes_remitente_idTousuarios")
+  pedidos                                     pedidos[]
+  sesiones                                    sesiones[]
+}
+
+model bodega {
+  id          BigInt       @id @default(autoincrement())
+  nombre      String       @db.Text
+  direccion   String?      @db.Text
+  capacidad   Int?
+  descripcion String?
+  inventario  inventario[]
+}
+
+model proveedor {
+  id        BigInt               @id @default(autoincrement())
+  nombre    String               @db.Text
+  contacto  String?              @db.Text
+  telefono  String?              @db.Text
+  email     String?              @db.Text
+  productos producto_proveedor[]
+}
+
+model producto_proveedor {
+  id             BigInt    @id @default(autoincrement())
+  producto       productos @relation(fields: [productoId], references: [id])
+  productoId     BigInt
+  proveedor      proveedor @relation(fields: [proveedorId], references: [id])
+  proveedorId    BigInt
+  precio         Decimal   @db.Decimal(10, 2)
+  tiempoEntrega  Int
+  disponibilidad Boolean   @default(true)
+}
+
+model inventario {
+  id         BigInt    @id @default(autoincrement())
+  producto   productos @relation(fields: [productoId], references: [id])
+  productoId BigInt
+  bodega     bodega    @relation(fields: [bodegaId], references: [id])
+  bodegaId   BigInt
+  stock      Int       @default(0)
+}
