@@ -19,6 +19,12 @@ export const findUserByEmail = async (email: string) => {
     });
 };
 
+export const findUserByEmailAdmin = async (email: string) => {
+    return await prisma.usuarios.findUnique({
+        where: { email },
+    });
+};
+
 export const createUser = async (userData: any) => {
     return await prisma.usuarios.create({ data: userData });
 };
