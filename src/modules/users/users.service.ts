@@ -3,6 +3,7 @@ import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import { sendStructuredEmail } from '../../config/mailer';
 import {
+    createSesionlAdmin,
     createUser,
     findUserByEmail,
     getAllUsers,
@@ -57,7 +58,7 @@ export const loginUserService = async (data: any) => {
     if (!data.password) {
         throw new Error('La contraseña es obligatoria');
     }
-    console.log('🔍 Buscando usuario en la base de datos:', data.email);
+    // console.log('🔍 Buscando usuario en la base de datos:', data.email);
     const user = await findUserByEmail(data.email);
     if (!user || !(await bcrypt.compare(data.password, user.password))) {
         console.error('❌ Credenciales inválidas para:', data.email);
@@ -66,14 +67,24 @@ export const loginUserService = async (data: any) => {
     const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET!, {
         expiresIn: '6h',
     });
-    // const { id, nombre, email, tipo_usuario, nivel_prioridad, createdAt } =
-    //     user;
-    const returnData = { ...user, id: user.id.toString(), token: token };
+
+    const dataSesion = {
+        usuario_id: Number(user.id),
+        token: token,
+        inicio: user.createdAt,
+    };
+    const sesion = await createSesionlAdmin(dataSesion);
+    // const sesionToStringID = { ...sesion, id: sesion.id.toString() };
+
+    const returnData = {
+        ...user,
+        id: user.id.toString(),
+        token: token,
+        sesion,
+    };
 
     console.log('✅ Usuario autenticado:', user.email);
-    // return jwt.sign({ email: user.email }, process.env.JWT_SECRET!, {
-    //   expiresIn: "6h",
-    // });
+
     return returnData;
 };
 

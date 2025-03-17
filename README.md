@@ -15,46 +15,46 @@ Este proyecto es el backend de una aplicación de comercio electrónico. Proporc
 ## Instalación
 
 1. Clona el repositorio:
-   ```bash
-   git clone https://github.com/tu-usuario/ecommerce-backend.git
-   ```
+    ```bash
+    git clone https://github.com/tu-usuario/ecommerce-backend.git
+    ```
 2. Navega al directorio del proyecto:
-   ```bash
-   cd ecommerce-backend
-   ```
+    ```bash
+    cd ecommerce-backend
+    ```
 3. Instala las dependencias:
-   ```bash
-   npm install
-   ```
+    ```bash
+    npm install
+    ```
 
 ## Configuración
 
 1. Crea un archivo `.env` en la raíz del proyecto con las siguientes variables:
-   ```
-   PORT=5000
-   MONGO_URI=tu_mongo_uri
-   JWT_SECRET=tu_jwt_secreto
-   ```
+    ```
+    PORT=5000
+    MONGO_URI=tu_mongo_uri
+    JWT_SECRET=tu_jwt_secreto
+    ```
 
 ## Uso
 
 1. Inicia el servidor:
-   ```bash
-   npm start
-   ```
+    ```bash
+    npm start
+    ```
 2. La API estará disponible en `http://localhost:5000`.
 
 ## Endpoints
 
 - **Productos**
-  - `GET /api/products` - Obtener todos los productos
-  - `POST /api/products` - Crear un nuevo producto
+    - `GET /api/products` - Obtener todos los productos
+    - `POST /api/products` - Crear un nuevo producto
 - **Usuarios**
-  - `POST /api/users/register` - Registrar un nuevo usuario
-  - `POST /api/users/login` - Iniciar sesión
+    - `POST /api/users/register` - Registrar un nuevo usuario
+    - `POST /api/users/login` - Iniciar sesión
 - **Pedidos**
-  - `GET /api/orders` - Obtener todos los pedidos
-  - `POST /api/orders` - Crear un nuevo pedido
+    - `GET /api/orders` - Obtener todos los pedidos
+    - `POST /api/orders` - Crear un nuevo pedido
 
 ## Contribución
 
@@ -133,3 +133,17 @@ npx prisma db pull
 npx prisma generate
 
 npx prisma studio
+
+cargar datos al github
+git status
+git add .
+
+//Para archivos especificos
+git add src/carp-modules/files/files.controller.ts
+
+//COn un mensaje
+git commit -m "✨ Agregar subida de imágenes optimizada y eliminación de archivos"
+git push origin main
+
+//Si trabajo en otra rama
+git push origin nombre-de-tu-rama

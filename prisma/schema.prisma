@@ -92,6 +92,7 @@ model imagenes {
   id          BigInt     @id
   producto_id BigInt?
   url         String
+  thumbnail   String? // ✅ Nuevo campo para almacenar la miniatura
   productos   productos? @relation(fields: [producto_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
@@ -222,7 +223,7 @@ model secciones {
 }
 
 model sesiones {
-  id         BigInt    @id
+  id         BigInt    @id @default(autoincrement())
   usuario_id BigInt?
   token      String
   inicio     DateTime? @default(now()) @db.Timestamp(6)

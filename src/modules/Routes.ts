@@ -15,8 +15,4 @@ router.use('/suppliers', suppliersRouter);
 router.use('/inventory', inventoryRoutes);
 router.use('/files', filesRoutes);
 
-// router.post('/upload', upload.single('file'), FileController.uploadFile);
-
-// router.use('/orders', orderRoutes);
-
 export default router;

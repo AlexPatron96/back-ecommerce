@@ -35,6 +35,10 @@ app.use((req, res, next) => {
 
 // Prisma Client
 export const prisma = new PrismaClient();
+// ✅ Serializador global para BigInt
+(BigInt.prototype as any).toJSON = function () {
+    return this.toString();
+};
 
 // Importar rutas
 import Routes from './modules/Routes';

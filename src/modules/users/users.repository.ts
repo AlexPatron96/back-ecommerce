@@ -19,9 +19,16 @@ export const findUserByEmail = async (email: string) => {
     });
 };
 
-export const findUserByEmailAdmin = async (email: string) => {
+export const createSesion = async (email: string) => {
     return await prisma.usuarios.findUnique({
         where: { email },
+    });
+};
+
+export const createSesionlAdmin = async (dataSesion: any) => {
+    const { usuario_id, token, inicio } = dataSesion;
+    return await prisma.sesiones.create({
+        data: { usuario_id: usuario_id, token: token, inicio: inicio },
     });
 };
 
