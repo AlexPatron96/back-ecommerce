@@ -1,7 +1,4 @@
-// repositories/producto_proveedor.repository.ts
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma } from '../../app';
 
 export const createProductoProveedorRepo = async (data: any) => {
     return await prisma.producto_proveedor.create({ data });

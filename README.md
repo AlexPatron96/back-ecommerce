@@ -129,6 +129,7 @@ Para salir de la consola de PostgreSQL, escribe:
 \dt
 
 npx prisma db pull
+npx prisma migrate dev --name add_thumbnail_to_images
 
 npx prisma generate
 
@@ -147,3 +148,32 @@ git push origin main
 
 //Si trabajo en otra rama
 git push origin nombre-de-tu-rama
+
+tambien se podria crear una tabla de cotizacion de productos y otra tabla para crear los detalles de el nombre de la pagina o empresa que sera para la pagina web donde se incluya datos necesarios para la facturacion electronica en ecuador
+
+📌 Faltan 11 tablas por optimizar:
+🔹 Actividades (actividades)
+🔹 Categorías (categorias)
+🔹 Cupones (cupones) (Ya implementado en backend, falta validación en compras si es necesario)
+🔹 Detalles de cliente (detalles_cliente)
+🔹 Facturas (facturas) (Pendiente para implementar facturación electrónica y cotizaciones)
+🔹 Favoritos (favoritos)//✅
+🔹 Imágenes (imagenes) (Relacionado con files, puede necesitar mejoras en BD)
+🔹 Impuestos (impuestos) //✅
+🔹 Marcas (marcas)//✅
+🔹 Métodos de entrega (metodos_entrega)//✅
+🔹 Métodos de pago (metodos_pago)//✅
+
+🔥 Dime con cuál seguimos! 😃
+📌 Las opciones que faltan por optimizar:
+
+<!-- ✅ Métodos de pago (metodos_pago) → Opciones de pago en el checkout.
+✅ Métodos de entrega (metodos_entrega) → Configuración de envíos. -->
+<!-- ✅ Favoritos (favoritos) → Permite a los usuarios guardar productos favoritos.
+✅ Marcas (marcas) → Gestión de marcas de productos. -->
+
+✅ Categorías (categorias) → Organización de productos en la tienda.
+✅ Imágenes (imagenes) → Puede necesitar mejoras en la BD.
+✅ Detalles de cliente (detalles_cliente) → Información de facturación/envío.
+✅ Sesiones (sesiones) → Ya optimizada en autenticación, pero puede necesitar mejoras en BD.
+✅ Facturas (facturas) → La dejamos para el final con la facturación electrónica.

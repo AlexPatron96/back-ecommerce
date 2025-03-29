@@ -8,7 +8,7 @@ datasource db {
 }
 
 model actividades {
-  id             BigInt    @id
+  id             BigInt    @id @default(autoincrement())
   usuario_id     BigInt?
   tipo_actividad String
   descripcion    String?
@@ -17,7 +17,7 @@ model actividades {
 }
 
 model carrito {
-  id          BigInt     @id
+  id          BigInt     @id @default(autoincrement())
   usuario_id  BigInt?
   producto_id BigInt?
   cantidad    Int
@@ -26,7 +26,7 @@ model carrito {
 }
 
 model categorias {
-  id          BigInt      @id
+  id          BigInt      @id @default(autoincrement())
   nombre      String
   descripcion String?
   seccion_id  BigInt?
@@ -35,7 +35,7 @@ model categorias {
 }
 
 model cupones {
-  id                   BigInt    @id
+  id                   BigInt    @id @default(autoincrement())
   codigo               String    @unique
   descripcion          String?
   descuento_porcentaje Decimal?  @db.Decimal(5, 2)
@@ -48,7 +48,7 @@ model cupones {
 }
 
 model detalles_cliente {
-  id                    BigInt    @id
+  id                    BigInt    @id @default(autoincrement())
   usuario_id            BigInt?
   nombre_completo       String
   numero_cedula         String?
@@ -62,7 +62,7 @@ model detalles_cliente {
 }
 
 model detalles_pedido {
-  id              BigInt     @id
+  id              BigInt     @id @default(autoincrement())
   pedido_id       BigInt?
   producto_id     BigInt?
   cantidad        Int
@@ -72,7 +72,7 @@ model detalles_pedido {
 }
 
 model facturas {
-  id            BigInt    @id
+  id            BigInt    @id @default(autoincrement())
   pedido_id     BigInt?
   fecha_emision DateTime? @default(now()) @db.Timestamp(6)
   total         Decimal   @db.Decimal(10, 2)
@@ -81,7 +81,7 @@ model facturas {
 }
 
 model favoritos {
-  id          BigInt     @id
+  id          BigInt     @id @default(autoincrement())
   usuario_id  BigInt?
   producto_id BigInt?
   productos   productos? @relation(fields: [producto_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -89,7 +89,7 @@ model favoritos {
 }
 
 model imagenes {
-  id          BigInt     @id
+  id          BigInt     @id @default(autoincrement())
   producto_id BigInt?
   url         String
   thumbnail   String? // ✅ Nuevo campo para almacenar la miniatura
@@ -97,21 +97,21 @@ model imagenes {
 }
 
 model impuestos {
-  id                BigInt              @id
+  id                BigInt              @id @default(autoincrement())
   nombre            String
   porcentaje        Decimal             @db.Decimal(5, 2)
   producto_impuesto producto_impuesto[]
 }
 
 model marcas {
-  id          BigInt      @id
+  id          BigInt      @id @default(autoincrement())
   nombre      String
   descripcion String?
   productos   productos[]
 }
 
 model medios_publicidad {
-  id            BigInt      @id
+  id            BigInt      @id @default(autoincrement())
   publicidad_id BigInt?
   tipo          String?
   url           String
@@ -119,7 +119,7 @@ model medios_publicidad {
 }
 
 model mensajes {
-  id                                          BigInt    @id
+  id                                          BigInt    @id @default(autoincrement())
   remitente_id                                BigInt?
   destinatario_id                             BigInt?
   contenido                                   String
@@ -129,7 +129,7 @@ model mensajes {
 }
 
 model metodos_entrega {
-  id          BigInt    @id
+  id          BigInt    @id @default(autoincrement())
   nombre      String
   descripcion String?
   costo       Decimal?  @db.Decimal(10, 2)
@@ -137,7 +137,7 @@ model metodos_entrega {
 }
 
 model metodos_pago {
-  id          BigInt    @id
+  id          BigInt    @id @default(autoincrement())
   nombre      String
   descripcion String?
   costo       Decimal?  @db.Decimal(10, 2)
@@ -145,7 +145,7 @@ model metodos_pago {
 }
 
 model pedidos {
-  id                BigInt            @id
+  id                BigInt            @id @default(autoincrement())
   usuario_id        BigInt?
   fecha_pedido      DateTime?         @default(now()) @db.Timestamp(6)
   estado            String
@@ -169,7 +169,7 @@ model pedidos {
 }
 
 model producto_impuesto {
-  id          BigInt     @id
+  id          BigInt     @id @default(autoincrement())
   producto_id BigInt?
   impuesto_id BigInt?
   impuestos   impuestos? @relation(fields: [impuesto_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -177,7 +177,7 @@ model producto_impuesto {
 }
 
 model productos {
-  id                BigInt               @id
+  id                BigInt               @id @default(autoincrement())
   nombre            String
   descripcion       String?
   precio            Decimal              @db.Decimal(10, 2)
@@ -205,7 +205,7 @@ model productos {
 }
 
 model publicidad {
-  id                BigInt              @id
+  id                BigInt              @id @default(autoincrement())
   titulo            String
   contenido         String?
   fecha_inicio      DateTime?           @db.Timestamp(6)
@@ -216,7 +216,7 @@ model publicidad {
 }
 
 model secciones {
-  id          BigInt       @id
+  id          BigInt       @id @default(autoincrement())
   nombre      String
   descripcion String?
   categorias  categorias[]

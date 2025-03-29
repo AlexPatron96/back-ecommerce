@@ -39,6 +39,9 @@ export const createUser = async (userData: any) => {
 export const getAllUsers = async () => {
     return await prisma.usuarios.findMany();
 };
+export const logoutRepository = async (token: any) => {
+    return await prisma.sesiones.deleteMany({ where: { token } });
+};
 
 export const getAllUsersMoreData = async () => {
     return await prisma.usuarios.findMany({

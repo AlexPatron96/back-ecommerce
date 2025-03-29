@@ -2,11 +2,13 @@ import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import { sendStructuredEmail } from '../../config/mailer';
+import { servicioCrearDetallesCliente } from './detalles/detalles_usuario.service';
 import {
     createSesionlAdmin,
     createUser,
     findUserByEmail,
     getAllUsers,
+    logoutRepository,
     updateUserPassword,
 } from './users.repository';
 
@@ -28,6 +30,12 @@ export const validateService = async (token: string) => {
 
 export const getUsersService = async () => {
     return await getAllUsers();
+};
+
+export const logoutService = async (data: any) => {
+    const token = data.authorization?.split(' ')[1];
+    if (!token) return new Error('Error No esta el token');
+    return await logoutRepository(token);
 };
 
 export const createUserService = async (data: any) => {
@@ -160,4 +168,57 @@ export const resetPasswordService = async (
         email: user.email,
     });
     return { ...NewPasswordResult, email: user.email };
+};
+
+export const obtenerUsuarioPorEmail = async (
+    email: string,
+    password: string,
+) => {
+    const usuario = await findUserByEmail(email);
+    if (!usuario) throw new Error('Usuario no Encontrado');
+
+    const esPasswordValido = await bcrypt.compare(password, usuario.password);
+    if (!esPasswordValido) throw new Error('Contraseña incorrecta');
+
+    const token = jwt.sign({ email: usuario.email }, process.env.JWT_SECRET!, {
+        expiresIn: '2h',
+    });
+    return { data: usuario, token };
+};
+
+export const crearUsuario = async (data: any) => {
+    const {
+        nombre,
+        email,
+        password,
+        tipo_usuario,
+        nivel_prioridad,
+        detalles_cliente,
+    } = data;
+    const existingUser = await findUserByEmail(data.email);
+    if (existingUser) {
+        throw new Error('El email ya está en uso');
+    }
+    const dataRegistreUser = {
+        nombre,
+        email,
+        password,
+        tipo_usuario,
+        nivel_prioridad: nivel_prioridad ?? 0, // No enviar 'id', lo genera la BD,
+    };
+    const hashPassword = await bcrypt.hash(password, 10);
+    const RegistreUSer = await createUser({
+        ...dataRegistreUser,
+        password: hashPassword,
+    });
+
+    const idUserRegister = Number(RegistreUSer.id);
+    let detalleClient = null;
+    if (tipo_usuario === 'CLIENTE') {
+        detalleClient = await servicioCrearDetallesCliente(
+            idUserRegister,
+            detalles_cliente,
+        );
+    }
+    return { RegistreUSer, detalleClient };
 };

@@ -1,7 +1,5 @@
 // repositories/proveedores.repository.ts
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma } from '../../app';
 
 export const createProveedorRepo = async (data: any) => {
     console.log(data);

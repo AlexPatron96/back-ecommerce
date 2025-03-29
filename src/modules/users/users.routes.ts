@@ -9,6 +9,7 @@ import {
     createUser,
     getUsers,
     loginUser,
+    logoutUser,
     requestPasswordReset,
     resetPassword,
     validateController,
@@ -22,6 +23,7 @@ router.get('/', getUsers);
 router.get('/protec-users-list', getUsers);
 router.post('/register', createUser);
 router.post('/login', validateSchema(userSchema), loginUser);
+router.post('/logout', logoutUser);
 // router.post('/login', loginUser);
 router.post('/request-password-reset', requestPasswordReset);
 router.post('/reset-password', resetPassword);
